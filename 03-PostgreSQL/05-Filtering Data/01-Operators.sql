@@ -197,6 +197,119 @@ WHERE
 SELECT * FROM actors
 WHERE 
 	actor_id NOT IN ('1','2','3','4')
-	
 
 
+--- BETWEEN and NOT BETWEEN
+
+--- get all actors where birth year between 1991 to 1995
+SELECT * FROM actors
+WHERE 
+	date_of_birth BETWEEN '1991-01-01' AND '1995-12-31'
+ORDER BY date_of_birth
+
+---get all movies between 1998 and 2004
+SELECT * FROM movies
+WHERE
+	release_date BETWEEN '1998-01-01' AND '2004-12-31'
+ORDER BY release_date
+
+---get all movies whoose domestic revenue between 100 and 300
+SELECT m2.movie_name , m1.revenues_domestic FROM movies_revenues as m1 
+JOIN movies as m2 on m1.movie_id = m2.movie_id
+WHERE m1.revenues_domestic BETWEEN '99' AND '301'
+ORDER BY m1.revenues_domestic
+
+---get all movies where movies length between 100 and 200
+SELECT movie_name, movie_length FROM movies
+WHERE movie_length BETWEEN '100' AND '200' 
+ORDER BY movie_length
+    --- Equivalent
+SELECT movie_name , movie_length FROM movies
+WHERE movie_length >= 100 AND movie_length <= 200
+
+SELECT movie_name, movie_length FROM movies
+WHERE movie_length NOT BETWEEN '100' AND '200' 
+ORDER BY movie_length
+	--- Equivalent
+SELECT movie_name , movie_length FROM movies
+WHERE movie_length >= 200 OR movie_length <= 100
+
+
+
+--- LIKE and NOT LIKE pattern matching 
+--- Examples 
+     --- ' % '-> any number of char
+	 --- ' _ ' -> only one single char
+SELECT 'hello' LIKE '%llo'  -- true    
+SELECT 'hello' LIKE '%ll'   -- false
+SELECT 'hello' LIKE '_ello'  -- true 
+SELECT 'hello' LIKE '%l_' -- true
+
+--- Queries
+
+---get all actors with starting name with a char a
+SELECT first_name FROM actors WHERE first_name LIKE 'A%'  --- case sensetive
+
+---get all actors with name ending with a char a
+SELECT first_name FROM actors WHERE first_name LIKE '%a'
+
+---get all actors name with five later name
+SELECT * FROM actors WHERE first_name LIKE '_____'
+
+---actors name with 'l' at second place in its name
+SELECT * FROM actors WHERE first_name LIKE '_l%'
+
+---for avoiding case sensetive we can use ILIKE 
+SELECT * FROM actors WHERE first_name ILIKE 'tim' 
+
+
+
+--- NULL and NOT NULL 
+---find actors name with missing or null birth date
+SELECT * FROM actors WHERE date_of_birth IS NULL
+
+---find actors with missing name and missing birth date
+SELECT * FROM actors WHERE first_name IS NULL OR date_of_birth IS NULL
+
+---get all movies where domestic value is null
+SELECT m2.movie_name , m1.revenues_domestic FROM movies_revenues as m1 
+JOIN movies as m2 on m1.movie_id = m2.movie_id
+WHERE m1.revenues_domestic IS NULL
+
+---get all movies where either domestic or international revenues is null
+SELECT m2.movie_name , m1.revenues_domestic , m1.revenues_international 
+FROM movies_revenues as m1 
+JOIN movies as m2 on m1.movie_id = m2.movie_id
+WHERE m1.revenues_domestic IS NULL OR m1.revenues_international IS NULL
+
+SELECT m2.movie_name , m1.revenues_domestic , m1.revenues_international 
+FROM movies_revenues as m1 
+JOIN movies as m2 on m1.movie_id = m2.movie_id
+WHERE m1.revenues_domestic IS NULL AND m1.revenues_international IS NULL
+
+---using NOT NULL
+---movie whoose domestic revenues is not null
+SELECT m2.movie_name , m1.revenues_domestic 
+FROM movies_revenues as m1 
+JOIN movies as m2 on m1.movie_id = m2.movie_id
+WHERE m1.revenues_domestic IS NOT NULL 
+
+
+---using = NULL   -- GIVING BLANK ROW
+		 = 'NULL' -- NOT WORKING ERROR
+		 = ''     -- NOT WORKING ERROR 
+		 = ' '    -- NOT WORKING ERROR
+
+--- concatenation
+SELECT 'hello' || 'world'
+SELECT CONCAT(first_name ,' ', last_name) AS fullname FROM actors
+SELECT CONCAT_WS(',',first_name ,last_name ,date_of_birth) AS fullname FROM actors
+		 
+--- concatenation with NULL 
+SELECT 'hello' || NULL ||'world'   --- WHOLE OUTPUT NULL
+
+SELECT CONCAT(revenues_domestic ,' | ',revenues_international) 
+AS Total FROM movies_revenues      --- NULL concatenation output ommit seprator
+
+SELECT CONCAT_WS(' | ',revenues_domestic ,revenues_international) 
+AS Total FROM movies_revenues      --- NULL concatenation output doesnt ommit seprator
