@@ -109,3 +109,24 @@ ALTER TABLE jobs ALTER COLUMN job TYPE motion USING job::text::motion   --- if a
 DROP TYPE motion_old
 
 
+DO
+$$
+BEGIN
+  IF NOT EXISTS (
+    SELECT *
+    FROM pg_type typ
+    INNER JOIN pg_namespace nsp
+      ON nsp.oid = typ.typnamespace
+    WHERE nsp.nspname = current_schema()
+      AND typ.typname = 'ai'
+  ) THEN
+
+    CREATE TYPE ai AS (
+      a text,
+      i integer
+    );
+
+  END IF;
+END;
+$$
+LANGUAGE plpgsql;
