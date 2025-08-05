@@ -83,3 +83,34 @@ SELECT GREATEST(revenues_domestic,revenues_international) AS "Greatest",
 LEAST(revenues_domestic,revenues_international) AS "Least"
 FROM movies_revenues
 
+--- AVG
+
+SELECT ROUND(AVG(movie_length),2) FROM movies
+
+SELECT ROUND(AVG(movie_length),2) FROM movies
+WHERE movie_lang  = 'English'
+
+SELECT AVG(DISTINCT(movie_length)) FROM movies WHERE movie_lang = 'English'
+
+SELECT AVG(movie_lang) from movies --- MOVIE_LANG IS VARCHAR WE CAN'T USE AVG FUNCTION
+
+SELECT AVG(movie_length) , SUM(movie_length) FROM movies WHERE movie_lang = 'English'
+
+---- AVG function ignore the NULL values
+
+--- Combining columns using mathematical operations
+
+SELECT 10+2 AS "Addition"
+SELECT 10-2
+SELECT 10*2
+SELECT 13 / 2 :: INTEGER
+SELECT 10.22 + 2.44
+SELECT 10%2
+
+SELECT (revenues_domestic+revenues_international) AS "Total Earning" 
+FROM movies_revenues
+ORDER BY "Total Earning" DESC
+NULLS LAST
+
+
+
