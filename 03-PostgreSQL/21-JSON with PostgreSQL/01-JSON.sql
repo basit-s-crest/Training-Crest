@@ -193,6 +193,7 @@ VALUES('David' , 'Santneir')
 INSERT INTO directors_docs(body)
 SELECT row_to_json(a)::jsonb FROM(
 SELECT 
+	director_id,
  	first_name,
 	 last_name,
 	 date_of_birth,
@@ -212,6 +213,22 @@ SELECT
 TRUNCATE directors_docs
 
 --- In JSON, null is an actual value, and it is represented by a JSON literal ("null").
+
+
+--- Length of JSON array
+SELECT *,jsonb_array_length(body->'all_movies') as total_movies
+FROM directors_docs;
+
+SELECT jsonb_object_keys(body) FROM directors_docs;
+
+SELECT j.key , j.value  FROM directors_docs, jsonb_each(body) j;
+
+
+SELECT j.*  FROM directors_docs, jsonb_to_record(body) j(
+	director_id INT,
+	first_name VARCHAR(255),
+	nationality VARCHAR(100)
+);
 
 
 
