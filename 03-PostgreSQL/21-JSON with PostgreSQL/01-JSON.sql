@@ -47,4 +47,171 @@ SELECT book_info->'title' FROM books;
 SELECT book_info->>'title' FROM books;
 
 --- Update JSON data
+INSERT INTO books(book_info)
+VALUES
+('
+	{
+       "title" : "Book2", 
+	   "author" : "Author2"
+	}
+'),
+('
+	{
+       "title" : "Book3", 
+	   "author" : "Author3"
+	}
+'),
+('
+	{
+       "title" : "Book4", 
+	   "author" : "Author4"
+	}
+'),
+('
+	{
+       "title" : "Book5", 
+	   "author" : "Author5"
+	}
+');
+
+--- Updating a record
+
+UPDATE books 
+SET book_info = book_info || '{"author" : "Meet"}'
+WHERE book_info->>'author' = 'Author5';
+
+
+UPDATE books 
+SET book_info = book_info || '{"title" : "Crest"}'
+WHERE book_info->>'title' = 'Book5';
+
+
+--- Adding new feild
+UPDATE books
+SET book_info = book_info || '{"Best Seller" : true}'
+WHERE book_info->>'title' = 'Book1';
+
+
+UPDATE books
+SET book_info = book_info || '{"Best Seller" : true}'
+WHERE book_info->>'author' = 'Author2';
+
+SELECT * FROM books;
+
+--- Lets Add multiple key value pair 
+UPDATE books
+SET book_info = book_info || '{"Pages" : 100 , "Description" : "Hello!!"}'
+WHERE book_info->>'author' = 'Author3';
+
+--- Deleting Record  - '-' operator
+UPDATE books
+SET book_info = book_info - 'Best Seller'
+WHERE book_info->>'author' = 'Author4';    --- Thoose record which doesnt have Best Seller feild will also return the query
+
+UPDATE books
+SET book_info = book_info - 'Best Seller'
+WHERE book_info->>'author' = 'Author2';
+
+--- Adding nested data like availibility location 
+UPDATE books
+SET book_info = book_info || '{"Availibility Location" : [
+      	"New York" ,  "Oklahoma" , "San Jose" , "Baltimore"
+]}' 
+WHERE book_info->>'author' = 'Author2';
+
+--- Delete array value using '#-'
+UPDATE books
+SET book_info = book_info #- '{"Availibility Location",1}' 
+WHERE book_info->>'author' = 'Author2';
+
+
+--- Table to JSON 
+SELECT row_to_json(d) FROM director d;
+
+SELECT row_to_json(t) FROM (
+	SELECT first_name,
+		last_name FROM director
+)as t;
+
+
+
+
+SELECT 
+* , 
+(
+   SELECT json_agg(x) as "All Movies" FROM 
+   (
+		SELECT 
+			movie_name
+		FROM movies 
+		WHERE director_id = directors.director_id  
+   )as x
+)
+FROM directors;   
+
+
+SELECT json_build_array(1,2,3,4);
+
+SELECT json_build_array(1,2,3,4,'Hi');
+
+SELECT json_build_object(1,2,3,4,5,'Hi');
+
+--- json_object({key},{value})
+
+SELECT json_object('{name,email}' ,'{Drake,a@b}')
+
+CREATE TABLE directors_docs(
+	id SERIAL,
+	body JSONB
+);
+
+INSERT INTO directors_docs(body)
+SELECT row_to_json(a)::jsonb FROM(
+SELECT 
+ 	first_name,
+	 last_name,
+	 date_of_birth,
+	 nationality,
+	 (
+	 		SELECT json_agg(x) FROM (
+					SELECT
+						movie_name
+						FROM movies
+						WHERE director_id = directors.director_id
+			) x
+	 )
+	 FROM directors
+) as a;
+
+SELECT * FROM directors_docs;
+
+
+INSERT INTO directors(first_name, last_name)
+VALUES('David' , 'Santneir')
+
+
+INSERT INTO directors_docs(body)
+SELECT row_to_json(a)::jsonb FROM(
+SELECT 
+ 	first_name,
+	 last_name,
+	 date_of_birth,
+	 nationality,
+	 (
+	 		SELECT CASE COUNT(x) WHEN 0 THEN  '[]' ELSE json_agg(x) END as all_movies
+			 FROM (
+					SELECT
+						movie_name
+						FROM movies
+						WHERE director_id = directors.director_id
+			) x
+	 )
+	 FROM directors
+) as a;
+
+TRUNCATE directors_docs
+
+--- In JSON, null is an actual value, and it is represented by a JSON literal ("null").
+
+
 
