@@ -253,4 +253,40 @@ SELECT * FROM directors_docs WHERE (body->>'director_id')::integer IN (2,3,4,1,7
 EXPLAIN SELECT * FROM directors_docs WHERE body->>'first_name' LIKE 'J%'
 
 
+--- Inserting 20,000 row data into table contacts_docs
+
+SELECT * FROM contacts_docs WHERE body @> '{"first_name":"John"}';
+
+--- total time
+
+EXPLAIN ANALYZE SELECT * FROM contacts_docs WHERE body @> '{"first_name":"John"}';
+
+--- Execution time before indexing : 7.3 ms
+
+--- We can enhance the query execution time via indexing 
+--- GIN 
+
+CREATE INDEX idx_gin_contacts_docs_body ON contacts_docs USING GIN(body);
+
+--- after indexing execution time : 1.36 ms
+
+EXPLAIN ANALYZE SELECT * FROM contacts_docs WHERE body @> '{"first_name":"John"}';
+
+--- Page size : 3664 KB
+
+SELECT pg_size_pretty (pg_relation_size('idx_gin_contacts_docs_body'::regclass)) as index_name;
+
+--- Is there any better way to create indexing 
+
+CREATE INDEX idx_gin_contacts_docs_body_cooll ON contacts_docs USING GIN (body jsonb_path_ops);
+
+SELECT pg_size_pretty (pg_relation_size('idx_gin_contacts_docs_body_cooll':: regclass)) as index_name;
+
+--- reduced page size : 2512 KB -- By using 'jsonb_path_ops' operator in indexing 
+
+--- create index on specific JSON key too
+
+CREATE INDEX idx_gin_contacts_docs_body_fname ON contacts_docs USING GIN ((body->'first_name') jsonb_path_ops);
+
+SELECT pg_size_pretty(pg_relation_size('idx_gin_contacts_docs_body_fname':: regclass)) as index_name;
 
