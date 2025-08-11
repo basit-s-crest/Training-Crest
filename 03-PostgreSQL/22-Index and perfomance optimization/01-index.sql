@@ -73,7 +73,26 @@ DROP INDEX idx_suppliers_region;
 --- types of nodes  ,  nodes are stackable 
 SELECT * FROM pg_am;
 
-
+--- Seq Nodes
 --- Sequential scan , when no valuable alternative available 
+EXPLAIN SELECT * FROM region;
+
+--- Index Nodes
+--- Index scan, when we use indexing 
+EXPLAIN SELECT * FROM orders WHERE order_id = 1;
+--- Index only
+EXPLAIN SELECT order_id FROM orders WHERE order_id = 1;
+--- Bitmap 
 
 
+--- Join Nodes , used when we do table join
+
+--- Hash Join
+--- Inner Table , Outer Table 
+/*    
+		SHOW work_mem
+
+		Merge Join
+*/
+
+EXPLAIN SELECT * FROM customers NATURAL JOIN orders
