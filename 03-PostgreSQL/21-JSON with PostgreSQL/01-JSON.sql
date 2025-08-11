@@ -230,5 +230,27 @@ SELECT j.*  FROM directors_docs, jsonb_to_record(body) j(
 	nationality VARCHAR(100)
 );
 
+--- Existence Operator '?'  only if both side is text value 
+
+SELECT * FROM directors_docs WHERE body->'first_name' ? 'John';
+
+--- Containment Operator 
+
+SELECT * FROM directors_docs WHERE body @> '{"first_name":"John"}';
+
+SELECT * FROM directors_docs WHERE body @> '{"director_id":1}';  --- Even works on integer data
+
+SELECT * FROM directors_docs WHERE body->'all_movies' @> '[{"movie_name":"Toy Story"}]';
+
+--- Using LIKE
+
+SELECT * FROM directors_docs WHERE body->>'first_name' LIKE 'J%'
+
+SELECT * FROM directors_docs WHERE (body->>'director_id')::integer > 2
+
+SELECT * FROM directors_docs WHERE (body->>'director_id')::integer IN (2,3,4,1,7,8,11)
+
+EXPLAIN SELECT * FROM directors_docs WHERE body->>'first_name' LIKE 'J%'
+
 
 
