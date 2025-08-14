@@ -191,3 +191,20 @@ WHERE
     (next_order_date - order_date) <= 4;
 
 
+---
+WITH orders_by_country AS
+(
+    SELECT
+        ship_country,
+        order_id,
+        order_date,
+        ROW_NUMBER() OVER (PARTITION BY ship_country ORDER BY ship_country, order_date DESC) country_row_number
+    FROM orders
+)
+SELECT
+    ship_country,
+    order_id,
+    order_date
+FROM orders_by_country
+WHERE
+    country_row_number = 1;
