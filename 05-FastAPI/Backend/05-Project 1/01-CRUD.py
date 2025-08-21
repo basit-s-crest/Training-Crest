@@ -36,13 +36,14 @@ def all_book():
     return load_books()
 
 @app.get("/books/{book_id}" , response_model = Book)
-def book_by_id(book_id):
+def book_by_id(book_id:str):
     books = load_books()
     for book in books:
         if book.id == book_id:
             return book
+    raise HTTPException(status_code=400, detail="Book Id not matched")
 
-@app.post("/books",response_model = Book)
+@app.post("/books/",response_model = Book)
 def add_books(book:Book):
     books = load_books()
     for b in books:
