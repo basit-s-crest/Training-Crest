@@ -1,0 +1,14 @@
+[
+  {
+    "id": "2",
+    "title": "Communist Manifesto",
+    "author": "Karl Marx",
+    "category": "Politics"
+  },
+  {
+    "id": "4",
+    "title": "The Metamorphosis",
+    "author": "Franz Kafka",
+    "category": "Phycology"
+  }
+]
