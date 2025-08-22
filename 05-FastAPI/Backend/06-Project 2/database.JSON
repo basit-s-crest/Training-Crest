@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "The Pragmatic Programmer",
+    "author": "Andrew Hunt",
+    "category": "Software Engineering",
+    "pages": 352
+  },
+  {
+    "id": 0,
+    "title": "string",
+    "author": "string",
+    "category": "string",
+    "pages": 1
+  },
+  {
+    "id": 1,
+    "title": "string",
+    "author": "string",
+    "category": "string",
+    "pages": 1
+  },
+  {
+    "id": 2,
+    "title": "string",
+    "author": "string",
+    "category": "string",
+    "pages": 1
+  }
+]
