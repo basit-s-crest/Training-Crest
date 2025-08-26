@@ -27,6 +27,14 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         )
     return auth.create_user(db, user)
 
+
+@router.get("/me")
+async def read_current_user(current_user: models.User = Depends(auth.get_current_user)):
+    print(current_user)
+    return current_user
+
+
+
 @router.get("/{username}", response_model=schemas.UserOut)
 def read_user(username: str, db: Session = Depends(get_db)):
     db_user = auth.get_user_by_username(db, username=username)
@@ -37,10 +45,6 @@ def read_user(username: str, db: Session = Depends(get_db)):
         )
     return db_user
 
-@router.get("/me")
-async def read_current_user(current_user: models.User = Depends(auth.get_current_user)):
-    print(current_user)
-    return current_user
 
 
 
