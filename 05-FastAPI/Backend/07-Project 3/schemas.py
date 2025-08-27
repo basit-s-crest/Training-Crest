@@ -6,6 +6,7 @@ class TodoBase(BaseModel):
     description : str
     priority : int
     complete : bool = False
+    owner_id : int
 
 
 class TodoCreate(TodoBase):

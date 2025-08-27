@@ -20,5 +20,6 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    
+    #mobile_number = Column(String(15), nullable=True)
+
     todos = relationship("Todo", back_populates="owner")
