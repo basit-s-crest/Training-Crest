@@ -1,0 +1,72 @@
+/* Custom styles */
+body {
+    min-height: 100vh;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.min-vh-100 {
+    min-height: 100vh;
+}
+
+.todo-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.todo-card.priority-1 { border-left-color: #28a745; }
+.todo-card.priority-2 { border-left-color: #17a2b8; }
+.todo-card.priority-3 { border-left-color: #ffc107; }
+.todo-card.priority-4 { border-left-color: #fd7e14; }
+.todo-card.priority-5 { border-left-color: #dc3545; }
+
+.delete-btn {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.todo-card:hover .delete-btn {
+    opacity: 1;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+}
+
+.btn-primary {
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.3);
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.priority-badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+}

@@ -34,13 +34,23 @@ def read_todos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
     return crud.get_todos(db=db, skip=skip, limit=limit, owner_id = current_user.id)
 
 @router.get("/{todo_id}", response_model=schemas.TodoOut)
-def read_todo(todo_id : int , db : Session = Depends(get_db),
+def read_todo(todo_id: int, 
+              db: Session = Depends(get_db),
               current_user: models.User = Depends(auth.get_current_user)):
-    return crud.get_todo(db=db , id=todo_id , owner_id = current_user.id)
+    todo = crud.get_todo(db=db, id=todo_id, owner_id=current_user.id)
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    return todo
+
 
 @router.put("/{todo_id}", response_model=schemas.TodoOut)
-def update_todo(todo_id: int, todo: schemas.TodoUpdate, db: Session = Depends(get_db)):
-    updated_todo = crud.update_todo(db, todo_id, todo)
+def update_todo(
+    todo_id: int,
+    todo: schemas.TodoUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    updated_todo = crud.update_todo(db, todo_id, current_user.id, todo)
     if not updated_todo:
         raise HTTPException(status_code=404, detail="Todo not found")
     return updated_todo
@@ -49,6 +59,6 @@ def update_todo(todo_id: int, todo: schemas.TodoUpdate, db: Session = Depends(ge
 def delete_todo(todo_id : int , db : Session = Depends(get_db),
                 current_user: models.User = Depends(auth.get_current_user)):
     deleted_todo = crud.delete_todo(db=db , id=todo_id , owner_id = current_user.id)
-    if not delete_todo:
+    if not deleted_todo:
         raise HTTPException(status_code=404 , detail="Todo not available")
     return deleted_todo

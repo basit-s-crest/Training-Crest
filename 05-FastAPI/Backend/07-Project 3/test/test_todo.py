@@ -101,3 +101,10 @@ def test_read_all_authenticated_with_todo(test_todo):
     assert data[0]["priority"] == 5
     assert data[0]["complete"] is False
     assert data[0]["owner_id"] == test_todo.owner_id
+
+
+def test_read_one_authenticated_not_found(test_todo):
+    """When a todo does not exist, should return 404"""
+    response = client.get("/todos/9999")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Todo not found"}

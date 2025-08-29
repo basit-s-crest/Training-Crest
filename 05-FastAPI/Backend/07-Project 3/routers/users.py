@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-import schemas, models, auth , security
+from datetime import timedelta
+import schemas, models, auth, security
 from database import SessionLocal
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -34,6 +35,27 @@ async def read_current_user(current_user: models.User = Depends(auth.get_current
     return current_user
 
 
+
+@router.post("/login")
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    print(f"Login attempt for user: {form_data.username}")  # Debug log
+    user = auth.authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Create access token with 30 minutes expiration
+    access_token_expires = timedelta(minutes=30)
+    access_token = security.create_access_token(
+        data={"sub": user.username},
+        expires_delta=access_token_expires
+    )
+    
+    print(f"Login successful for user: {user.username}")  # Debug log
+    return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/{username}", response_model=schemas.UserOut)
 def read_user(username: str, db: Session = Depends(get_db)):

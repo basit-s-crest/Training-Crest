@@ -1,12 +1,17 @@
-from pydantic import BaseModel , EmailStr
+from pydantic import BaseModel, EmailStr, Field, validator
 
 
 class TodoBase(BaseModel):
-    title : str
-    description : str
-    priority : int
-    complete : bool = False
-    owner_id : int
+    title: str
+    description: str
+    priority: int = Field(..., ge=1, le=5)
+    complete: bool = False
+
+    @validator('priority')
+    def validate_priority(cls, v):
+        if not 1 <= v <= 5:
+            raise ValueError('Priority must be between 1 and 5')
+        return v
 
 
 class TodoCreate(TodoBase):

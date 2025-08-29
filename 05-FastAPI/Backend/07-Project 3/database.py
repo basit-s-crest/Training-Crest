@@ -24,5 +24,12 @@ def test_connection():
         print("Database connection failed:", str(e))
 
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db 
+    finally:
+        db.close()
+        
 if __name__ == "__main__":
     test_connection()

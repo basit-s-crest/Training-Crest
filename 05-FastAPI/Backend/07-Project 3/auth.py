@@ -45,9 +45,16 @@ def authenticate_user(db: Session, username: str, password: str):
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     print("🔑 Token received:", token)  # DEBUG
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
         print("👉 Decoded username from JWT:", username)   # DEBUG
         if username is None:
             raise HTTPException(status_code=401, detail="Token missing username")

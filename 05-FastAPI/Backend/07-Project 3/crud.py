@@ -40,8 +40,8 @@ def get_todo(db : Session , id : int , owner_id : int):
             .first()
     )
 
-def update_todo(db  : Session , id : int , update_data : schemas.TodoUpdate):
-    db_todo = get_todo(db, id)
+def update_todo(db: Session, id: int, owner_id: int, update_data: schemas.TodoUpdate):
+    db_todo = get_todo(db, id, owner_id)
     if not db_todo:
         return None
     for key, value in update_data.dict(exclude_unset=True).items():
