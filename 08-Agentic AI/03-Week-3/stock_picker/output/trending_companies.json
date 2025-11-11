@@ -1,0 +1,34 @@
+{
+    "companies": [
+        {
+            "name": "TG Therapeutics, Inc.",
+            "ticker": "TGTX",
+            "reason": "TG Therapeutics is trending due to rapid growth driven by its innovative cancer therapies, securing a top position among the fastest-growing technology-related companies."
+        },
+        {
+            "name": "Vytalize Health",
+            "ticker": "N/A",
+            "reason": "Vytalize Health is gaining attention for transforming patient care through advanced digital health solutions, contributing to its rapid expansion."
+        },
+        {
+            "name": "Lessen",
+            "ticker": "N/A",
+            "reason": "Lessen is trending for its innovative software platform that streamlines benefits administration, fueling its accelerated growth."
+        },
+        {
+            "name": "1upHealth",
+            "ticker": "N/A",
+            "reason": "1upHealth is notable for enabling easy and secure health data interoperability, expanding rapidly amid growing demand in health technology."
+        },
+        {
+            "name": "Deel",
+            "ticker": "N/A",
+            "reason": "Deel's global payroll and compliance platform is experiencing strong user adoption and revenue growth, making it a key player in HR technology."
+        },
+        {
+            "name": "Mosaic",
+            "ticker": "N/A",
+            "reason": "Mosaic is showing remarkable revenue growth driven by its project portfolio management software solutions."
+        }
+    ]
+}
