@@ -1,121 +1,78 @@
+# Account Management System Design
+## Module Overview
+The `accounts.py` module will contain a single class `Account` that encapsulates the functionality of a simple account management system for a trading simulation platform.
+
+## Account Class
+### Attributes
+* `account_id` (int): Unique identifier for the account
+* `initial_deposit` (float): Initial deposit amount
+* `balance` (float): Current balance
+* `holdings` (dict): Dictionary of share symbols and their respective quantities
+* `transactions` (list): List of transaction history
+
+### Methods
+#### `__init__(self, account_id, initial_deposit)`
+* Initializes a new account with the given `account_id` and `initial_deposit`
+* Sets the `balance` to the `initial_deposit`
+* Initializes an empty `holdings` dictionary and `transactions` list
+
+#### `deposit(self, amount)`
+* Deposits the specified `amount` into the account
+* Updates the `balance`
+
+#### `withdraw(self, amount)`
+* Withdraws the specified `amount` from the account if sufficient balance exists
+* Updates the `balance`
+* Raises a `ValueError` if the withdrawal would result in a negative balance
+
+#### `buy_shares(self, symbol, quantity)`
+* Purchases the specified `quantity` of shares with the given `symbol` if sufficient balance exists
+* Updates the `balance` and `holdings`
+* Raises a `ValueError` if the purchase would exceed the available balance
+
+#### `sell_shares(self, symbol, quantity)`
+* Sells the specified `quantity` of shares with the given `symbol` if sufficient shares exist
+* Updates the `balance` and `holdings`
+* Raises a `ValueError` if the sale would exceed the available shares
+
+#### `get_share_price(symbol)`
+* Returns the current price of the share with the given `symbol`
+* Includes a test implementation that returns fixed prices for AAPL, TSLA, GOOGL
+
+#### `calculate_portfolio_value(self)`
+* Calculates the total value of the user's portfolio based on the current share prices
+* Returns the total value
+
+#### `calculate_profit_loss(self)`
+* Calculates the profit or loss from the initial deposit
+* Returns the profit or loss
+
+#### `get_holdings(self)`
+* Returns the current holdings of the user
+
+#### `get_transaction_history(self)`
+* Returns the list of transactions made by the user
+
+## Example Usage
 ```python
-# accounts.py
+account = Account(1, 1000.0)
+account.deposit(500.0)
+account.buy_shares('AAPL', 10)
+account.sell_shares('AAPL', 5)
+print(account.get_holdings())
+print(account.get_transaction_history())
+print(account.calculate_portfolio_value())
+print(account.calculate_profit_loss())
+```
 
-class Account:
-    def __init__(self, account_id, initial_deposit):
-        """
-        Initializes a new account with the given account_id and initial_deposit.
-        
-        :param account_id: a unique identifier for the account
-        :param initial_deposit: the initial deposit made into the account
-        """
-        self.account_id = account_id
-        self.balance = initial_deposit
-        self.initial_deposit = initial_deposit
-        self.holdings = {}
-        self.transactions = []
-
-    def deposit(self, amount):
-        """
-        Deposits the given amount into the account.
-        
-        :param amount: the amount to deposit
-        """
-        self.balance += amount
-        self.transactions.append({"type": "deposit", "amount": amount})
-
-    def withdraw(self, amount):
-        """
-        Withdraws the given amount from the account if possible.
-        
-        :param amount: the amount to withdraw
-        :raises ValueError: if the withdrawal would result in a negative balance
-        """
-        if amount > self.balance:
-            raise ValueError("Insufficient funds")
-        self.balance -= amount
-        self.transactions.append({"type": "withdrawal", "amount": amount})
-
-    def buy(self, symbol, quantity):
-        """
-        Buys the given quantity of shares with the given symbol.
-        
-        :param symbol: the symbol of the share to buy
-        :param quantity: the quantity of shares to buy
-        :raises ValueError: if the purchase would exceed the available balance
-        """
-        share_price = get_share_price(symbol)
-        cost = share_price * quantity
-        if cost > self.balance:
-            raise ValueError("Insufficient funds")
-        self.balance -= cost
-        if symbol in self.holdings:
-            self.holdings[symbol] += quantity
-        else:
-            self.holdings[symbol] = quantity
-        self.transactions.append({"type": "buy", "symbol": symbol, "quantity": quantity, "price": share_price})
-
-    def sell(self, symbol, quantity):
-        """
-        Sells the given quantity of shares with the given symbol.
-        
-        :param symbol: the symbol of the share to sell
-        :param quantity: the quantity of shares to sell
-        :raises ValueError: if the sale would exceed the available quantity
-        """
-        if symbol not in self.holdings or self.holdings[symbol] < quantity:
-            raise ValueError("Insufficient shares")
-        share_price = get_share_price(symbol)
-        revenue = share_price * quantity
-        self.balance += revenue
-        self.holdings[symbol] -= quantity
-        if self.holdings[symbol] == 0:
-            del self.holdings[symbol]
-        self.transactions.append({"type": "sell", "symbol": symbol, "quantity": quantity, "price": share_price})
-
-    def get_holdings(self):
-        """
-        Returns the current holdings.
-        
-        :return: a dictionary mapping share symbols to quantities held
-        """
-        return self.holdings
-
-    def get_balance(self):
-        """
-        Returns the current balance.
-        
-        :return: the current balance
-        """
-        return self.balance
-
-    def get_profit_loss(self):
-        """
-        Calculates and returns the profit or loss from the initial deposit.
-        
-        :return: the profit or loss
-        """
-        return self.balance - self.initial_deposit
-
-    def get_transactions(self):
-        """
-        Returns the list of transactions.
-        
-        :return: a list of transactions
-        """
-        return self.transactions
-
+## get_share_price Function
+### Test Implementation
+```python
 def get_share_price(symbol):
-    """
-    A test implementation that returns fixed prices for AAPL, TSLA, GOOGL.
-    
-    :param symbol: the symbol of the share
-    :return: the current price of the share
-    """
     prices = {
-        "AAPL": 150.0,
-        "TSLA": 200.0,
-        "GOOGL": 3000.0
+        'AAPL': 100.0,
+        'TSLA': 500.0,
+        'GOOGL': 2000.0
     }
     return prices.get(symbol, 0.0)
 ```
